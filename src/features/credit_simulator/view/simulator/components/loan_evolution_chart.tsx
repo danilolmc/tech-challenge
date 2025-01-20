@@ -23,7 +23,7 @@ const CustomTooltip = ({active, payload, label}: CustomTooltipProps) => {
     if (active && payload && payload.length) {
         return (
             <div className="custom-tooltip bg-background p-2 border-l-2 border-l-primary">
-                <p>{`Mês: ${label}`}</p>
+                <p>{`Mês: ${Number(label) + 1}`}</p>
                 <p>{`Total pago: ${moneyFormat(payload[0]?.value)}`}</p>
             </div>
         );
