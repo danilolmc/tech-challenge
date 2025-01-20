@@ -7,7 +7,9 @@
 - React
 - Typescript
 - Zod
+- Shadcn/UI
 - TailwindCSS
+- Recharts
 - Vite
 - Vitest
 - Testing Library
