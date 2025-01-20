@@ -73,10 +73,10 @@ O projeto possui a seguinte estrutura de arquivos:
                  # descaoplando e abstraindo a comunicação através de inversão de dependência
 ```
 
-O grande benefício do MVVM para esse projeto está relacionado com a separação clara de responsavilidades:
+O grande benefício do MVVM para esse projeto está relacionado com a separação clara de responsabilidades:
 
 - O Model só se preocupa com as regras do sistema 
 - A ViewModel interage com a model, gerencia estados e formulários 
 - E a view só se preocupa com o que tem direito, a interface do usuário
 
-E para desacoplar essa comunicação, facilitando a testabilidade e manutenibilidade, o princípio de Inversão de Dependência do SOLID é essencial
+E para desacoplar essa comunicação, facilitando a testabilidade e manutenibilidade, o princípio de Inversão de Dependência do SOLID é essencial.
