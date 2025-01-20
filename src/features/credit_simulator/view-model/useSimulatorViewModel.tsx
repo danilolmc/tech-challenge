@@ -1,13 +1,13 @@
-import {SimulatorModelReturn} from "@/features/credit_simulator/model/simulator/simulatorModel.tsx";
+import {useState} from "react";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {truncateToDecimalPlaces} from "@/lib/utils.ts";
+import {useForm, UseFormReturn} from "react-hook-form";
 import {
     Simulation,
     SimulationParams,
     SimulationResult
 } from "@/features/credit_simulator/model/simulator/domain/simulation.ts";
-import {truncateToDecimalPlaces} from "@/lib/utils.ts";
-import {useForm, UseFormReturn} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useState} from "react";
+import {SimulatorModelReturn} from "@/features/credit_simulator/model/simulator/simulatorModel.tsx";
 
 export type SimulatorViewModelProps = {
     simulatorModel: SimulatorModelReturn
@@ -17,13 +17,14 @@ export type SimulatorViewModelReturn = {
     simulate: () => void,
     form: UseFormReturn<Simulation>,
     result: SimulationResult | undefined
+    getPaymentEvolution: () => { month: number, totalPayed: number }[]
 }
 
 export type SimulatorViewModel = (data: SimulatorViewModelProps) => SimulatorViewModelReturn
 
 export const useSimulatorViewModel: SimulatorViewModel = ({simulatorModel}) => {
 
-    const [simulation_result, setSimulation] = useState<SimulationResult>();
+    const [simulation, setSimulation] = useState<SimulationResult>();
 
     const form = useForm<Simulation>({
         resolver: zodResolver(SimulationParams),
@@ -53,9 +54,30 @@ export const useSimulatorViewModel: SimulatorViewModel = ({simulatorModel}) => {
         }
     }
 
+    const getPaymentEvolution = () => {
+
+        if (simulation?.simulation_result?.monthlyPayment) {
+            const installments = form.getValues().installments;
+            if(!installments) return [];
+
+            const totalPayed = new Array(installments).fill(0).map((_, index) => {
+
+                return {
+                    month: index + 1,
+                    totalPayed: truncateToDecimalPlaces(Number(simulation?.simulation_result?.monthlyPayment), 2) * (index + 1),
+                }
+            });
+
+            return totalPayed;
+        }
+
+        return [];
+    }
+
     return {
         simulate,
         form,
-        result: simulation_result
+        result: simulation,
+        getPaymentEvolution
     }
 }
