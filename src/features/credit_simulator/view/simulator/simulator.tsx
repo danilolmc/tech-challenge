@@ -1,9 +1,12 @@
 import {useTheme} from "@/lib/theme.tsx";
 import {Switch} from "@/components/ui/switch.tsx";
-import {LoanProposal} from "@/features/credit_simulator/view/simulator/components/loan_proposal.tsx";
 import {SimulationForm} from "@/features/credit_simulator/view/simulator/components/simulation_form.tsx";
 import {SimulatorViewModelReturn} from "@/features/credit_simulator/view-model/useSimulatorViewModel.tsx";
-import {LoanEvolutionChart} from "@/features/credit_simulator/view/simulator/components/loan_evolution_chart.tsx";
+import {LoanProposal,} from "@/features/credit_simulator/view/simulator/components/proposal";
+import {SimulationResult} from "@/features/credit_simulator/model/simulator/domain/simulation.ts";
+import {
+    LoanEvolutionChart
+} from "@/features/credit_simulator/view/simulator/components/charts/loan_evolution_chart.tsx";
 
 export type SimulatorViewProps = {
     simulatorViewModel: SimulatorViewModelReturn
@@ -28,30 +31,23 @@ export const SimulatorView = ({simulatorViewModel}: SimulatorViewProps) => {
             <p className={"text-1xl"}>Simule um empréstimo, é muito fácil!</p>
         </header>
         <main className={"py-3 mt-4"}>
+            {
+                <>
+                    <div className={"md:flex items-center gap-10 justify-between"}>
+                        <SimulationForm form={form} onSubmit={onSubmit}/>
 
-            <div className={"md:flex items-center gap-10 justify-between"}>
-                <SimulationForm form={form} onSubmit={onSubmit}/>
-
-                <div className="mt-5 sm:mt-0 flex-1 lg:max-w-sm">
-                    {result?.simulation_result ? (
-                        <>
-                            <h2 className="font-semibold">Boa notícia!</h2>
-                            <p className="text-sm">Temos uma proposta pra você!</p>
-                            <LoanProposal
-                                simulation_result={result.simulation_result}
-                                className="flex-1"
-                            />
-                        </>
-                    ) : null}
-                </div>
-            </div>
-
-            {result?.simulation_result ? (
-                <div className={"mt-10"}>
-                    <LoanEvolutionChart paymentEvolution={getPaymentEvolution()}/>
-                </div>
-            ) : null}
-
+                        <LoanProposal.Wrapper simulation={result as SimulationResult}>
+                            <div className={"mt-5 md:mt-0 flex-1 lg:max-w-sm"}>
+                                <LoanProposal.Header/>
+                                <LoanProposal.Body/>
+                            </div>
+                        </LoanProposal.Wrapper>
+                    </div>
+                    <div className={"mt-10"}>
+                        <LoanEvolutionChart paymentEvolution={getPaymentEvolution()}/>
+                    </div>
+                </>
+            }
         </main>
     </div>
 }
